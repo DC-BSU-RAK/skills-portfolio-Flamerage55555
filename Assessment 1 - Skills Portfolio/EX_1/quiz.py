@@ -479,30 +479,30 @@ class ArithmeticQuiz:
         emoji_label = tk.Label(
             results_card,
             text=emoji,
-            font=('Segoe UI', 72),
+            font=('Segoe UI', 64),
             bg='white'
         )
-        emoji_label.pack(pady=(40, 20))
+        emoji_label.pack(pady=(20, 10))
         
         # Message
         message_label = tk.Label(
             results_card,
             text=message,
-            font=('Segoe UI', 28, 'bold'),
+            font=('Segoe UI', 24, 'bold'),
             bg='white',
             fg=color
         )
-        message_label.pack(pady=(0, 30))
+        message_label.pack(pady=(0, 15))
         
         # Score circle
-        score_frame = tk.Frame(results_card, bg=color, width=200, height=200)
-        score_frame.pack(pady=20)
+        score_frame = tk.Frame(results_card, bg=color, width=160, height=160)
+        score_frame.pack(pady=10)
         score_frame.pack_propagate(False)
         
         score_label = tk.Label(
             score_frame,
             text=f"{self.score}",
-            font=('Segoe UI', 56, 'bold'),
+            font=('Segoe UI', 48, 'bold'),
             bg=color,
             fg='white'
         )
@@ -521,25 +521,25 @@ class ArithmeticQuiz:
         grade_label = tk.Label(
             results_card,
             text=f"Grade: {grade}",
-            font=('Segoe UI', 32, 'bold'),
+            font=('Segoe UI', 28, 'bold'),
             bg='white',
             fg=color
         )
-        grade_label.pack(pady=(30, 10))
+        grade_label.pack(pady=(15, 5))
         
         # Out of 100
         total_label = tk.Label(
             results_card,
             text="out of 100",
-            font=('Segoe UI', 14),
+            font=('Segoe UI', 12),
             bg='white',
             fg='#6b7280'
         )
-        total_label.pack(pady=(0, 40))
+        total_label.pack(pady=(0, 20))
         
         # Action buttons
         button_frame = tk.Frame(results_card, bg='white')
-        button_frame.pack(pady=(20, 40))
+        button_frame.pack(pady=(10, 20))
         
         play_again_btn = self.create_modern_button(
             button_frame,

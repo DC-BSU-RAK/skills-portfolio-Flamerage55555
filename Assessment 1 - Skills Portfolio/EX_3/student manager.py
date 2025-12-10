@@ -2,7 +2,7 @@ import os
 import tkinter as tk
 from tkinter import messagebox, simpledialog, ttk
 
-# Define color scheme for the application.
+# Set up our color palette
 BG_COLOR = "#1a0b2e" 
 CARD_COLOR = "#2d1b4e" 
 FG_COLOR = "#f3e8ff" 
@@ -22,8 +22,8 @@ FONT_TITLE = ("Helvetica", 22, "bold")
 FONT_HEADER = ("Helvetica", 13, "bold")
 
 class Student:
-    # Represents a student with personal details and academic marks
-    # Stores code, name, three course marks, and exam mark
+    # This class holds all the information about a single student
+    # including their ID, name, marks from three courses, and their exam score
     def __init__(self, code, name, mark1, mark2, mark3, exam_mark):
         self.code = code
         self.name = name
@@ -52,8 +52,8 @@ class Student:
         return f"{self.name} ({self.code})"
 
 class StudentManagerApp:
-    # Main application class that manages the GUI and student data
-    # Handles window setup, UI creation, data loading, and user interactions
+    # The heart of our application - handles everything the user sees and interacts with
+    # Takes care of the window, buttons, the student list display, loading/saving files, and processing user actions
     def __init__(self, root):
         self.root = root
         self.root.title("Student Manager")
@@ -76,7 +76,7 @@ class StudentManagerApp:
         style = ttk.Style()
         style.theme_use('clam')
         
-        # Configure the appearance of the Treeview list widget.
+        # Style the table to match our dark theme with nice spacing
         style.configure("Treeview", 
                 background=BG_COLOR, 
                 foreground=FG_COLOR, 
@@ -95,7 +95,7 @@ class StudentManagerApp:
                   background=[('selected', HIGHLIGHT_COLOR)],
                   foreground=[('selected', FG_COLOR)])
         
-        # Remove visual borders for a cleaner look
+        # Strips away the default borders to give the table a clean, modern appearance
         style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
 
     def create_header(self):
@@ -114,7 +114,7 @@ class StudentManagerApp:
         menu_frame = tk.Frame(self.root, bg=BG_COLOR)
         menu_frame.pack(pady=6, padx=12, fill=tk.X)
         def create_btn(text, command, color):
-            # Helper function to create styled buttons with consistent appearance
+            # A helper that quickly creates buttons with our style so they all look the same
             btn = tk.Button(menu_frame, 
                             text=text, 
                             command=command,
@@ -129,7 +129,7 @@ class StudentManagerApp:
                             cursor="hand2")
             return btn
 
-        # Arrange buttons in a grid with equal widths
+        # Make all buttons the same size so they look balanced in the menu
         menu_frame.columnconfigure(0, weight=1)
         menu_frame.columnconfigure(1, weight=1)
         menu_frame.columnconfigure(2, weight=1)
@@ -140,25 +140,25 @@ class StudentManagerApp:
         create_btn("Highest", self.show_highest_score, COLOR_ORANGE).grid(row=0, column=2, sticky="ew", padx=5, pady=5)
         create_btn("Lowest", self.show_lowest_score, COLOR_RED).grid(row=0, column=3, sticky="ew", padx=5, pady=5)
 
-        # Row 2
+        # Second row of action buttons
         create_btn("Sort", self.sort_records, "#A855F7").grid(row=1, column=0, sticky="ew", padx=5, pady=5)
         create_btn("Add", self.add_record, "#EC4899").grid(row=1, column=1, sticky="ew", padx=5, pady=5)
         create_btn("Delete", self.delete_record, "#EF4444").grid(row=1, column=2, sticky="ew", padx=5, pady=5)
         create_btn("Update", self.update_record, "#3B82F6").grid(row=1, column=3, sticky="ew", padx=5, pady=5)
 
     def create_data_view(self):
-        # Build the Treeview table that displays student records
-        # Create a container frame to hold the student list
+        # Build the table that will show all our student data in neat rows and columns
+        # First, we create a frame to hold everything
         list_container = tk.Frame(self.root, bg=BG_COLOR)
         list_container.pack(expand=True, fill=tk.BOTH, padx=20, pady=10)
         
-        # Add a thin separator line above the table for visual distinction
+        # Add a subtle line separator to make the table stand out from the menu
         tk.Frame(list_container, bg=HIGHLIGHT_COLOR, height=1).pack(fill=tk.X, pady=(0, 10))
 
         columns = ("code", "name", "coursework", "exam", "percentage", "grade")
         self.tree = ttk.Treeview(list_container, columns=columns, show="headings", selectmode="browse")
         
-        # Define table columns with left-aligned text and center-aligned numbers
+        # Set up the column headers - text goes left, numbers go in the middle
         self.tree.heading("code", text="ID", anchor=tk.W)
         self.tree.heading("name", text="Name", anchor=tk.W)
         self.tree.heading("coursework", text="Coursework", anchor=tk.CENTER)
@@ -176,7 +176,7 @@ class StudentManagerApp:
         self.tree.pack(fill=tk.BOTH, expand=True)
 
     def create_status_bar(self):
-        # Create a status bar at the bottom to display application status messages
+        # Add a status bar at the bottom so users know what the app is doing
         self.status_var = tk.StringVar()
         self.status_var.set("Ready")
         
@@ -200,7 +200,7 @@ class StudentManagerApp:
             base_dir = os.path.dirname(os.path.abspath(__file__))
             path = os.path.join(base_dir, "studentMarks.txt")
 
-            # Create template file if it doesn't exist to prevent file not found errors
+            # If the data file doesn't exist yet, we'll create an empty one so there are no errors
             if not os.path.exists(path):
                 with open(path, "w", encoding="utf-8") as wf:
                     wf.write("0\n")
@@ -265,7 +265,7 @@ class StudentManagerApp:
         ))
 
     def view_all_records(self):
-        # Display all student records in the table
+        # Show every student in the table
         self.clear_tree()
         if not self.students:
             return
@@ -286,7 +286,7 @@ class StudentManagerApp:
             if found == 0: self.view_all_records()
 
     def show_highest_score(self):
-        # Find and display the student with the highest overall score
+        # Search through all students and highlight the one with the best score
         if not self.students:
             return
         max_score = max(s.get_overall_total() for s in self.students)
@@ -297,7 +297,7 @@ class StudentManagerApp:
         self.update_status(f"Highest Score: {max_score}")
 
     def show_lowest_score(self):
-        # Find and display the student with the lowest overall score
+        # Find and show the student with the worst score
         if not self.students:
             return
         min_score = min(s.get_overall_total() for s in self.students)
@@ -308,13 +308,11 @@ class StudentManagerApp:
         self.update_status(f"Lowest Score: {min_score}")
 
     def sort_records(self):
-        # Ask user for sort order
+        # Let the user choose how they want the students sorted
         choice = messagebox.askyesno("Sort Students", "Sort by Overall Score?\nYes: Ascending\nNo: Descending")
-        # Note: askyesno returns True for Yes (Ascending), False for No (Descending). 
-        # But we want to confirm if they cancelled? No, askyesno is binary. 
-        # Let's assume Yes=Ascending, No=Descending for now as per simple requirement.
+        # Yes means lowest to highest, No means highest to lowest
         
-        reverse_sort = not choice  # If choice is True (Asc), reverse is False.
+        reverse_sort = not choice  # Convert the user's choice to the right sorting direction
         
         self.students.sort(key=lambda s: s.get_overall_total(), reverse=reverse_sort)
         self.view_all_records()
@@ -322,7 +320,7 @@ class StudentManagerApp:
         self.update_status(f"Sorted by Score ({order})")
 
     def add_record(self):
-        # Create a dialog to add a new student
+        # Pop up a window where the user can type in a new student's information
         add_window = tk.Toplevel(self.root)
         add_window.title("Add Student")
         add_window.geometry("400x450")
@@ -350,7 +348,7 @@ class StudentManagerApp:
                 if not code or not name:
                     raise ValueError("ID and Name cannot be empty")
                 
-                # Check for duplicate ID
+                # Make sure this student ID doesn't already exist
                 if any(s.code == code for s in self.students):
                     messagebox.showerror("Error", "Student ID already exists!")
                     return
@@ -373,17 +371,14 @@ class StudentManagerApp:
         search_term = simpledialog.askstring("Delete Student", "Enter Name or ID to delete:")
         if not search_term: return
 
-        # Find potential matches
+        # Search for any students that match what they typed
         matches = [s for s in self.students if search_term.lower() in s.name.lower() or search_term == s.code]
         
         if not matches:
             messagebox.showinfo("Not Found", "No matching student found.")
             return
         
-        # If multiple matches or one, confirm deletion. 
-        # For simplicity, if multiple, we'll ask user to be more specific or delete the first one?
-        # A robust solution lists them. Let's try to delete the first match but warn if multiple.
-        
+        # If we found more than one match, warn the user before deleting
         target = matches[0]
         if len(matches) > 1:
             if not messagebox.askokcancel("Multiple Matches", f"Found {len(matches)} matches. Deleting: {target}\nProceed?"):
@@ -399,15 +394,16 @@ class StudentManagerApp:
         search_term = simpledialog.askstring("Update Student", "Enter Name or ID to update:")
         if not search_term: return
 
+        # Look for students matching what the user typed
         matches = [s for s in self.students if search_term.lower() in s.name.lower() or search_term == s.code]
         
         if not matches:
             messagebox.showinfo("Not Found", "No matching student found.")
             return
 
-        student = matches[0] # Pick first match
+        student = matches[0]  # Use the first match we found
         
-        # Sub-menu window for updates
+        # Show a window with options to change different parts of the student's record
         update_window = tk.Toplevel(self.root)
         update_window.title(f"Update {student.name}")
         update_window.geometry("300x400")
@@ -416,7 +412,7 @@ class StudentManagerApp:
         tk.Label(update_window, text=f"Update: {student.name}", bg=BG_COLOR, fg=SECONDARY_FG, font=FONT_HEADER).pack(pady=10)
 
         def update_attr(attr_name, is_int=False, is_list_idx=None):
-            # Helper to ask for value and update
+            # A helper function that lets the user change one piece of student information
             current_val = getattr(student, attr_name)
             if is_list_idx is not None:
                 current_val = student.course_marks[is_list_idx]
@@ -442,7 +438,7 @@ class StudentManagerApp:
                 except ValueError:
                     messagebox.showerror("Error", "Invalid input format")
 
-        # Buttons for each field
+        # Create buttons so the user can update each piece of information separately
         tk.Button(update_window, text="Update Name", command=lambda: update_attr('name'), width=25).pack(pady=5)
         tk.Button(update_window, text="Update ID", command=lambda: update_attr('code'), width=25).pack(pady=5)
         tk.Button(update_window, text="Update Course Mark 1", command=lambda: update_attr('course_marks', True, 0), width=25).pack(pady=5)
